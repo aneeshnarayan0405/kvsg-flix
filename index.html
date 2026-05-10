@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KVSG Flix — For Vinayak</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --red:#E50914;
+  --dark:#141414;
+  --darker:#0a0a0a;
+  --card-bg:#1a1a1a;
+  --gold:#f5c518;
+  --muted:#aaa;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--darker);color:#fff;font-family:'Montserrat',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ─── SCREENS ─── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* ══════════════════════════════════
+   LOGIN
+══════════════════════════════════ */
+#login-screen{
+  flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#0a0a0a 0%,#1a0000 55%,#0a0a0a 100%);
+  position:relative;overflow:hidden;
+}
+#login-screen::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%,rgba(229,9,20,.13) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 70%,rgba(229,9,20,.08) 0%,transparent 70%);
+}
+
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3.5rem,11vw,7rem);
+  color:var(--red);letter-spacing:6px;
+  text-shadow:0 0 80px rgba(229,9,20,.5);
+  animation:fadeDown .8s ease both;
+}
+.logo-tagline{
+  font-size:.72rem;letter-spacing:7px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:3rem;
+  animation:fadeDown .95s ease both;
+}
+
+.login-box{
+  background:rgba(18,18,18,.94);
+  border:1px solid rgba(229,9,20,.22);
+  border-radius:14px;padding:2.6rem 2.6rem 2rem;
+  width:min(440px,92vw);
+  animation:fadeUp .9s ease both;
+  backdrop-filter:blur(14px);
+}
+.login-box h2{font-size:1.6rem;font-weight:700;margin-bottom:1.8rem}
+
+.field-group{margin-bottom:1.2rem}
+.field-group label{
+  display:block;font-size:.7rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;
+}
+.field-group input{
+  width:100%;background:#242424;border:1.5px solid #333;
+  border-radius:7px;padding:13px 16px;font-size:1rem;color:#fff;
+  font-family:'Montserrat',sans-serif;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field-group input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,9,20,.15)}
+.field-group input.err{border-color:#ff4444;animation:shake .4s ease}
+.error-msg{color:#ff6b6b;font-size:.82rem;margin-top:6px;min-height:18px;font-style:italic}
+
+.btn-main{
+  width:100%;background:var(--red);color:#fff;border:none;border-radius:7px;
+  padding:14px;font-size:1rem;font-weight:700;font-family:'Montserrat',sans-serif;
+  letter-spacing:1px;cursor:pointer;margin-top:.4rem;
+  transition:background .2s,transform .12s;
+}
+.btn-main:hover{background:#ff1020}
+.btn-main:active{transform:scale(.98)}
+
+.hint-toggle{text-align:center;margin-top:1.5rem}
+.hint-toggle button{
+  background:none;border:1px solid #444;color:var(--muted);
+  font-family:'Montserrat',sans-serif;font-size:.78rem;
+  padding:8px 18px;border-radius:20px;cursor:pointer;letter-spacing:1px;
+  transition:border-color .2s,color .2s;
+}
+.hint-toggle button:hover{border-color:var(--red);color:#fff}
+
+.hint-box{
+  margin-top:1.2rem;background:rgba(229,9,20,.06);
+  border:1px solid rgba(229,9,20,.25);border-radius:9px;
+  padding:1.2rem 1.4rem;display:none;
+}
+.hint-box.on{display:block;animation:fadeUp .4s ease}
+.hint-title{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:10px;font-weight:700}
+.hint-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:.87rem;line-height:1.55;color:#ddd}
+.hint-item:last-child{margin-bottom:0}
+.hint-num{
+  background:var(--red);color:#fff;font-size:.68rem;font-weight:700;
+  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px;
+}
+
+/* ══════════════════════════════════
+   PROFILE / YEAR SELECT
+══════════════════════════════════ */
+#profile-screen{
+  flex-direction:column;align-items:center;justify-content:center;
+  background:var(--darker);padding:2rem;
+}
+.profile-hdr{text-align:center;margin-bottom:3rem;animation:fadeDown .7s ease both}
+.profile-hdr .logo-sm{font-family:'Bebas Neue',sans-serif;color:var(--red);font-size:2rem;letter-spacing:3px;margin-bottom:1rem}
+.profile-hdr h2{font-size:clamp(1.3rem,4vw,1.9rem);font-weight:300;letter-spacing:1px}
+.profile-hdr h2 span{font-weight:700;color:var(--gold)}
+
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;max-width:800px;width:100%}
+
+.profile-card{
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  cursor:pointer;animation:fadeUp .7s ease both;transition:transform .22s;
+}
+.profile-card:nth-child(1){animation-delay:.1s}
+.profile-card:nth-child(2){animation-delay:.2s}
+.profile-card:nth-child(3){animation-delay:.3s}
+.profile-card:nth-child(4){animation-delay:.4s}
+.profile-card:hover{transform:scale(1.08)}
+.profile-card:hover .picon{border-color:#fff}
+
+.picon{
+  width:130px;height:130px;border-radius:9px;
+  border:3px solid transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:7px;transition:border-color .2s;
+}
+.yr-big{font-family:'Bebas Neue',sans-serif;font-size:2.3rem;letter-spacing:2px;line-height:1}
+.yr-sub{font-size:.63rem;letter-spacing:2px;text-transform:uppercase;opacity:.7}
+.pname{font-size:.9rem;font-weight:600;letter-spacing:1px;color:#bbb;text-align:center;transition:color .2s}
+.profile-card:hover .pname{color:#fff}
+
+.y1{background:linear-gradient(135deg,#1a1a2e,#16213e)}.c1{color:#7b9ef5}
+.y2{background:linear-gradient(135deg,#0d2137,#1a3a4a)}.c2{color:#5dc8d4}
+.y3{background:linear-gradient(135deg,#1a0a0a,#3a0d0d)}.c3{color:#f5a623}
+.y4{background:linear-gradient(135deg,#0d1a0d,#1a3a1a)}.c4{color:#7bd47b}
+
+/* ══════════════════════════════════
+   GALLERY / NETFLIX LAYOUT
+══════════════════════════════════ */
+#gallery-screen{flex-direction:column;background:var(--dark);min-height:100vh}
+
+.gal-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;gap:1.4rem;
+  padding:.9rem 2rem;
+  background:linear-gradient(to bottom,rgba(0,0,0,.95) 0%,rgba(0,0,0,0) 100%);
+  transition:background .3s;
+}
+.gal-nav.solid{background:rgba(10,10,10,.98)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--red);letter-spacing:3px}
+.nav-back{
+  background:none;border:1px solid #555;color:#ccc;
+  font-family:'Montserrat',sans-serif;font-size:.78rem;
+  padding:6px 14px;border-radius:5px;cursor:pointer;letter-spacing:1px;
+  transition:border-color .2s,color .2s;
+}
+.nav-back:hover{border-color:#fff;color:#fff}
+
+.music-bar{
+  margin-left:auto;display:flex;align-items:center;gap:10px;
+  font-size:.72rem;letter-spacing:1px;color:var(--muted);
+}
+.music-btn{
+  background:none;border:1px solid #444;color:var(--muted);
+  border-radius:20px;padding:5px 12px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;font-size:.72rem;letter-spacing:1px;
+  transition:border-color .2s,color .2s;
+}
+.music-btn:hover{border-color:var(--red);color:#fff}
+.music-note{animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── HERO SLIDESHOW ── */
+.hero{
+  position:relative;width:100%;
+  height:min(80vh,680px);
+  overflow:hidden;
+}
+.hero-slide{
+  position:absolute;inset:0;
+  opacity:0;transition:opacity 1.4s ease;
+}
+.hero-slide.active{opacity:1}
+.hero-slide img,.hero-slide video{
+  width:100%;height:100%;object-fit:cover;display:block;opacity:.5;
+}
+.hero-grad{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(0,0,0,.88) 0%,rgba(0,0,0,.25) 55%,transparent 100%),
+    linear-gradient(to top,rgba(20,20,20,1) 0%,transparent 35%);
+  z-index:2;pointer-events:none;
+}
+.hero-content{
+  position:absolute;bottom:14%;left:4%;max-width:min(560px,58%);
+  animation:fadeUp .8s ease both;z-index:3;
+}
+.hero-label{
+  font-size:.65rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--red);font-weight:700;margin-bottom:6px;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.6rem,6vw,5.5rem);
+  letter-spacing:3px;line-height:1.05;
+  margin-bottom:.8rem;
+  text-shadow:2px 2px 20px rgba(0,0,0,.8);
+}
+.hero-desc{
+  font-size:.9rem;line-height:1.75;color:#ddd;
+  margin-bottom:1.4rem;max-width:430px;
+  text-shadow:1px 1px 8px rgba(0,0,0,.9);
+}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
+.hbtn{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 24px;border-radius:5px;
+  font-family:'Montserrat',sans-serif;font-size:.88rem;font-weight:700;
+  cursor:pointer;border:none;transition:opacity .2s,transform .12s;letter-spacing:.5px;
+}
+.hbtn:active{transform:scale(.97)}
+.hbtn-play{background:#fff;color:#000}
+.hbtn-play:hover{opacity:.85}
+.hbtn-info{background:rgba(109,109,110,.7);color:#fff}
+.hbtn-info:hover{background:rgba(109,109,110,.5)}
+
+/* hero dots */
+.hero-dots{
+  position:absolute;bottom:8%;left:4%;z-index:4;
+  display:flex;gap:6px;
+}
+.hdot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,.3);cursor:pointer;
+  transition:background .3s,transform .2s;
+}
+.hdot.on{background:#fff;transform:scale(1.25)}
+
+/* ── CONTENT ROWS ── */
+.content-area{
+  padding:0 2rem 5rem;
+  margin-top:-80px;position:relative;z-index:10;
+}
+
+.row-section{margin-bottom:3rem}
+.row-title{
+  font-size:1.15rem;font-weight:700;letter-spacing:.5px;
+  margin-bottom:1rem;color:#e5e5e5;
+  display:flex;align-items:center;gap:10px;
+}
+.row-title span{font-size:.7rem;color:var(--muted);letter-spacing:2px;font-weight:400}
+
+/* PHOTO GRID — masonry feel with CSS grid */
+.photo-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:8px;
+}
+.photo-grid .media-card{aspect-ratio:unset;height:180px}
+.photo-grid .media-card:nth-child(3n){height:220px}
+.photo-grid .media-card:nth-child(5n){height:160px}
+
+/* VIDEO GRID */
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:10px;
+}
+.video-grid .media-card{aspect-ratio:16/9}
+
+.media-card{
+  position:relative;border-radius:6px;overflow:hidden;
+  cursor:pointer;background:#1a1a1a;
+  transition:transform .28s cubic-bezier(.34,.01,.23,1.3),box-shadow .28s;
+  animation:fadeUp .5s ease both;
+}
+.media-card:hover{
+  transform:scale(1.06);
+  box-shadow:0 12px 40px rgba(0,0,0,.7);
+  z-index:10;
+}
+.media-card img,.media-card video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:filter .28s;
+}
+.media-card:hover img,.media-card:hover video{filter:brightness(.7)}
+
+.card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 55%);
+  opacity:0;transition:opacity .28s;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:12px;
+}
+.media-card:hover .card-overlay{opacity:1}
+.card-title{font-size:.78rem;font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.card-meta{font-size:.65rem;color:var(--muted);letter-spacing:.5px}
+
+.play-icon{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:48px;height:48px;
+  background:rgba(255,255,255,.92);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+.play-icon svg{width:20px;height:20px;margin-left:4px}
+.media-card:hover .play-icon{transform:translate(-50%,-50%) scale(1)}
+
+.photo-badge,.video-badge{
+  position:absolute;top:8px;right:8px;
+  font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 8px;border-radius:3px;
+}
+.photo-badge{background:rgba(229,9,20,.85)}
+.video-badge{background:rgba(0,0,0,.8);border:1px solid #666}
+
+.empty-row{
+  background:#1a1a1a;border:1px dashed #2a2a2a;border-radius:8px;
+  padding:2.5rem;text-align:center;color:#444;font-size:.85rem;
+  letter-spacing:1px;font-style:italic;
+}
+
+/* SLIDESHOW STRIP (hero) */
+.hero-strip{
+  position:absolute;right:2%;top:50%;transform:translateY(-50%);
+  z-index:4;display:flex;flex-direction:column;gap:6px;
+}
+.strip-thumb{
+  width:60px;height:40px;border-radius:4px;overflow:hidden;
+  border:2px solid transparent;cursor:pointer;transition:border-color .2s,transform .2s;
+  opacity:.55;
+}
+.strip-thumb.on{border-color:#fff;opacity:1}
+.strip-thumb:hover{opacity:.85;transform:scale(1.06)}
+.strip-thumb img{width:100%;height:100%;object-fit:cover}
+
+/* ── VIDEO MODAL ── */
+.vmodal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.95);z-index:999;
+  align-items:center;justify-content:center;padding:1rem;
+}
+.vmodal-overlay.open{display:flex}
+.vmodal{
+  background:#0a0a0a;border-radius:12px;overflow:hidden;
+  width:min(960px,96vw);position:relative;
+  animation:popIn .32s ease both;
+  border:1px solid #222;
+}
+.vmodal video{width:100%;display:block;max-height:72vh;background:#000}
+.vmodal-info{padding:1rem 1.4rem 1.4rem}
+.vmodal-title{font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.vmodal-meta{font-size:.78rem;color:var(--muted);letter-spacing:1px}
+.vmodal-close{
+  position:absolute;top:.8rem;right:1rem;
+  background:rgba(0,0,0,.6);border:1px solid #444;color:#fff;font-size:1.3rem;
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;line-height:1;
+}
+.vmodal-close:hover{background:var(--red);border-color:var(--red)}
+
+/* ── LIGHTBOX ── */
+.lightbox{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.97);z-index:998;
+  align-items:center;justify-content:center;padding:1rem;
+  flex-direction:column;gap:1rem;
+}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:82vh;border-radius:8px;object-fit:contain;
+  animation:popIn .3s ease both;}
+.lb-close{
+  position:fixed;top:1.2rem;right:1.5rem;
+  background:rgba(0,0,0,.6);border:1px solid #444;color:#fff;font-size:1.3rem;
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.lb-close:hover{background:var(--red);border-color:var(--red)}
+.lb-nav{display:flex;gap:1rem}
+.lb-nav button{
+  background:rgba(255,255,255,.1);border:1px solid #444;color:#fff;
+  padding:8px 20px;border-radius:5px;cursor:pointer;font-family:'Montserrat',sans-serif;
+  font-size:.8rem;letter-spacing:1px;transition:background .2s;
+}
+.lb-nav button:hover{background:rgba(255,255,255,.2)}
+
+/* ══════════════════════════════════
+   BIRTHDAY MODAL
+══════════════════════════════════ */
+.bday-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.92);z-index:997;
+  align-items:center;justify-content:center;padding:1rem;
+}
+.bday-overlay.open{display:flex}
+.bday-modal{
+  background:#1a1a1a;border:1px solid rgba(229,9,20,.4);
+  border-radius:18px;padding:3rem 2.5rem;
+  max-width:520px;width:100%;text-align:center;
+  animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative;overflow:hidden;
+}
+.bday-modal::before{
+  content:'';position:absolute;top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:radial-gradient(ellipse at center,rgba(229,9,20,.07) 0%,transparent 60%);
+  animation:rotateBg 10s linear infinite;pointer-events:none;
+}
+.confetti-row{font-size:2.2rem;margin-bottom:1rem;animation:bounce 1.1s ease infinite alternate}
+.bday-modal h2{
+  font-family:'Bebas Neue',sans-serif;font-size:2.8rem;
+  letter-spacing:3px;color:var(--gold);margin-bottom:.4rem;
+}
+.bday-to{font-size:.9rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:1.5rem}
+.bday-msg{font-size:.93rem;line-height:2;color:#ddd;margin-bottom:2rem}
+.bday-msg strong{color:#ff7070}
+.bday-msg em{color:var(--gold);font-style:normal;font-weight:600}
+.btn-enter{
+  background:var(--red);color:#fff;border:none;border-radius:7px;
+  padding:12px 36px;font-size:.88rem;font-weight:700;
+  font-family:'Montserrat',sans-serif;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:background .2s,transform .1s;
+}
+.btn-enter:hover{background:#ff1020}
+.btn-enter:active{transform:scale(.97)}
+
+/* ══════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════ */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes popIn{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-9px)}}
+@keyframes rotateBg{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .login-box{padding:2rem 1.4rem}
+  .profile-grid{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .picon{width:110px;height:110px}
+  .hero{height:58vw;min-height:300px}
+  .hero-content{max-width:85%;bottom:10%}
+  .hero-title{font-size:clamp(2rem,7vw,3.2rem)}
+  .photo-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .video-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .content-area{padding:0 1rem 3rem}
+  .gal-nav{padding:.8rem 1rem}
+  .hero-strip{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="yt-players" style="position:fixed;bottom:-300px;left:-300px;width:1px;height:1px;overflow:hidden;pointer-events:none;z-index:-1"></div>
+
+<!-- ══════════════════════════════════
+     SCREEN 1 — LOGIN
+══════════════════════════════════ -->
+<div id="login-screen" class="screen active">
+  <div class="logo">KVSG Flix</div>
+  <div class="logo-tagline">Memories. Moments. Madness.</div>
+
+  <div class="login-box">
+    <h2>Sign In</h2>
+
+    <div class="field-group">
+      <label>Username</label>
+      <input type="text" id="uinput" placeholder="Enter your username" autocomplete="off"/>
+      <div class="error-msg" id="uerr"></div>
+    </div>
+
+    <div class="field-group" id="pfield" style="display:none">
+      <label>Password</label>
+      <input type="password" id="pinput" placeholder="Enter your password"/>
+      <div class="error-msg" id="perr"></div>
+    </div>
+
+    <button class="btn-main" id="login-btn" onclick="handleLogin()">Continue</button>
+
+    <div class="hint-toggle">
+      <button onclick="toggleHint()">🔍 Need a Hint?</button>
+    </div>
+
+    <div class="hint-box" id="hint-box">
+      <div class="hint-title">🕵️ Crack the Code</div>
+      <!-- ════════════════════════════════════════════
+           EDIT YOUR HINT QUESTIONS HERE:
+           ════════════════════════════════════════════ -->
+      <div class="hint-item">
+        <span class="hint-num">1</span>
+        <span><strong>Username:</strong> Nee inti peru followed by saathu's birth month (all small letters)</span>
+      </div>
+      <div class="hint-item">
+        <span class="hint-num">2</span>
+        <span><strong>Password:</strong> Jaideep's roll number last two digits + Aneesh's 4th year room no + Dheeru's Birthdate + Buvan's phn no last 3 digits</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN 2 — YEAR SELECT
+══════════════════════════════════ -->
+<div id="profile-screen" class="screen">
+  <div class="profile-hdr">
+    <div class="logo-sm">KVSG Flix</div>
+    <h2>Which year are we <span>vibing</span> today? 🎬</h2>
+  </div>
+  <div class="profile-grid">
+    <div class="profile-card" onclick="openYear(1)">
+      <div class="picon y1"><div class="yr-big c1">01</div><div class="yr-sub c1">First Year</div></div>
+      <div class="pname">1st Year</div>
+    </div>
+    <div class="profile-card" onclick="openYear(2)">
+      <div class="picon y2"><div class="yr-big c2">02</div><div class="yr-sub c2">Second Year</div></div>
+      <div class="pname">2nd Year</div>
+    </div>
+    <div class="profile-card" onclick="openYear(3)">
+      <div class="picon y3"><div class="yr-big c3">03</div><div class="yr-sub c3">Third Year</div></div>
+      <div class="pname">3rd Year</div>
+    </div>
+    <div class="profile-card" onclick="openYear(4)">
+      <div class="picon y4"><div class="yr-big c4">04</div><div class="yr-sub c4">Fourth Year</div></div>
+      <div class="pname">4th Year</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SCREEN 3 — GALLERY
+══════════════════════════════════ -->
+<div id="gallery-screen" class="screen" style="flex-direction:column">
+
+  <div class="gal-nav" id="gal-nav">
+    <span class="nav-logo">KVSG Flix</span>
+    <button class="nav-back" onclick="goBack()">&#8592; Years</button>
+    <div class="music-bar">
+      <span class="music-note" id="music-note" style="display:none">&#9835;</span>
+      <span id="song-name"></span>
+      <button class="music-btn" id="music-toggle" onclick="toggleMusic()">&#128263; Mute</button>
+    </div>
+  </div>
+
+  <!-- HERO SLIDESHOW -->
+  <div class="hero" id="hero-section">
+    <div id="hero-slides"></div>
+    <div class="hero-grad"></div>
+    <div class="hero-content">
+      <div class="hero-label" id="hero-label">KVSG Flix Exclusive</div>
+      <div class="hero-title" id="hero-title">Featured Memory</div>
+      <p class="hero-desc" id="hero-desc">The best moments from this year — handpicked, unfiltered, unforgettable.</p>
+      <div class="hero-btns">
+        <button class="hbtn hbtn-play" id="hero-play-btn" onclick="heroPlay()">&#9654; Play Featured</button>
+        <button class="hbtn hbtn-info" onclick="scrollToContent()">&#8505; All Memories</button>
+      </div>
+    </div>
+    <div class="hero-dots" id="hero-dots"></div>
+    <div class="hero-strip" id="hero-strip"></div>
+  </div>
+
+  <!-- CONTENT ROWS -->
+  <div class="content-area" id="content-area">
+    <div class="row-section" id="videos-row">
+      <div class="row-title">&#127916; Videos <span>· Click to play</span></div>
+      <div class="video-grid" id="video-cards"></div>
+    </div>
+    <div class="row-section" id="photos-row" style="margin-top:1rem">
+      <div class="row-title">&#128247; Photos <span>· Click to view</span></div>
+      <div class="photo-grid" id="photo-cards"></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="vmodal-overlay" id="vmodal">
+  <div class="vmodal">
+    <button class="vmodal-close" onclick="closeVmodal()">&#10005;</button>
+    <video id="vmodal-vid" controls preload="metadata"></video>
+    <div class="vmodal-info">
+      <div class="vmodal-title" id="vmodal-title"></div>
+      <div class="vmodal-meta" id="vmodal-meta"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">&#10005;</button>
+  <img id="lb-img" src="" alt=""/>
+  <div class="lb-nav">
+    <button onclick="lbPrev()">&#8592; Prev</button>
+    <button onclick="lbNext()">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- BIRTHDAY MODAL -->
+<div class="bday-overlay" id="bday-overlay">
+  <div class="bday-modal">
+    <div class="confetti-row">&#127874; &#127881; &#127882; &#129395; &#127880;</div>
+    <h2>Happy Birthday!</h2>
+    <div class="bday-to">To the legend himself — Vinayak</div>
+    <p class="bday-msg">
+      Ey Vinayak! &#127881;<br/><br/>
+      From <strong>meeting during ragging days</strong> and surviving together,
+      to <strong>late night walks</strong> that had zero destination but infinite nonsense —
+      from <em>eating together almost every single day</em>
+      (yes, we noticed, we just didn't say anything) &#128517;<br/><br/>
+      This guy watches <strong>Telugu film reviews</strong> like it's a full-time job,
+      breaks down every scene like he directed it himself.
+      But ask him to leave the room on time? <em>Impossible.</em>
+      Because the <strong>comb must be perfect.</strong>
+      We have collectively lost <em>years of our life</em> waiting for you
+      and your hair to reach an agreement. &#128514;<br/><br/>
+      The <strong>2nd Floor Gang</strong> loves you more than you know, da.
+      You're that one person who made every boring day actually worth remembering.
+      <em>Vinayak: The Series</em> — now streaming on <strong>KVSG Flix.</strong> &#127916;
+    </p>
+    <button class="btn-enter" onclick="closeBday()">&#127871; Start Watching</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+/* ════════════════════════════════════════════════════════
+   ⚙️  EDIT THIS SECTION — ALL YOUR CUSTOMISATION HERE
+   ════════════════════════════════════════════════════════
+
+   STEP 1: Change BASE to your GitHub raw URL
+           Format: https://raw.githubusercontent.com/YOUR_USERNAME/kvsg-flix/main
+           Example: https://raw.githubusercontent.com/saikumar123/kvsg-flix/main
+
+   STEP 2: Set your USERNAME and PASSWORD
+
+   STEP 3: Fill in MEDIA with your actual filenames
+           Just the filename — e.g. "photo1.jpg" or "trip.mp4"
+           The year folder is handled automatically.
+
+   STEP 4: (Optional) Change YEAR_SONGS YouTube video IDs
+*/
+
+// ─────────────────────────────────────────────
+// 🔗 YOUR GITHUB RAW BASE URL
+// ─────────────────────────────────────────────
+const BASE = "https://raw.githubusercontent.com/YOUR_USERNAME/kvsg-flix/main";
+//            ↑ Replace YOUR_USERNAME with your actual GitHub username
+
+// ─────────────────────────────────────────────
+// 🔐 LOGIN CREDENTIALS
+// ─────────────────────────────────────────────
+const USERNAME = "kintali11";   // ← change if needed
+const PASSWORD = "5531116659";  // ← change if needed
+
+// ─────────────────────────────────────────────
+// 🎵 BACKGROUND SONGS (one per year)
+// YouTube video IDs — change if you want different songs
+// Year 1: Kun Faya Kun (nostalgic, fresh start vibes)
+// Year 2: Tum Hi Ho — Aashiqui 2
+// Year 3: Raabta (nostalgic mid-college)
+// Year 4: Enna Sona / See You Again (final year, farewell)
+// ─────────────────────────────────────────────
+const YEAR_SONGS = {
+  1: { ytId: "cundMRCfL0Q", name: "The Scientist · Coldplay" },
+  2: { ytId: "k4V3Mo61fJM", name: "Fix You · Coldplay" },
+  3: { ytId: "nSDgHBa_-kw", name: "Photograph · Ed Sheeran" },
+  4: { ytId: "RgKAFK5djSk", name: "See You Again · Wiz Khalifa" }
+};
+
+// ─────────────────────────────────────────────
+// 📁 MEDIA CONFIG — LIST YOUR FILES HERE
+//
+// PHOTOS: just put filenames: "myphoto.jpg"
+// FILES must be inside the year folder in GitHub
+//   year1/ year2/ year3/ year4/
+//
+// VIDEOS: { file: "myvideo.mp4", title: "Trip to Goa", thumb: "trip_thumb.jpg" }
+//   - thumb: optional screenshot/thumbnail image for the card
+//   - If no thumb, use "" — card will show a dark placeholder
+//
+// HOW MANY? → Add as many as you want! The hero slideshow picks
+// the first 6 photos automatically.
+// ─────────────────────────────────────────────
+const MEDIA = {
+  1: {
+    videos: [
+      // EXAMPLE — remove the // to use:
+      // { file:"fresher_night.mp4", title:"Freshers Night 2021", thumb:"fresher_thumb.jpg" },
+      // { file:"first_trip.mp4",    title:"Our First Trip",       thumb:"trip_thumb.jpg"   },
+    ],
+    photos: [
+      // EXAMPLE — just type the filename:
+      // "photo1.jpg",
+      // "group_selfie.jpg",
+      // "canteen_gang.jpg",
+    ],
+    hero: {
+      label: "Chapter 01 · First Year",
+      title: "The Beginning",
+      desc: "When none of us knew what we were doing — but we were doing it together. The ragging days, the canteen runs, the hostel chaos. It all started here.",
+    }
+  },
+  2: {
+    videos: [
+      // { file:"cultural_fest.mp4", title:"Cultural Fest 2022", thumb:"cultural_thumb.jpg" },
+    ],
+    photos: [
+      // "photo1.jpg",
+      // "birthday_bash.jpg",
+    ],
+    hero: {
+      label: "Chapter 02 · Second Year",
+      title: "Getting Comfortable",
+      desc: "The phase where we stopped pretending to be serious students. Late night walks, eating together every day, and realising these people are actually stuck with us.",
+    }
+  },
+  3: {
+    videos: [
+      // { file:"project_demo.mp4", title:"That One Project Night", thumb:"" },
+    ],
+    photos: [
+      // "photo1.jpg",
+    ],
+    hero: {
+      label: "Chapter 03 · Third Year",
+      title: "Peak Chaos",
+      desc: "Full send. No chill. Telugu film reviews analysed like it was a thesis. And still, somehow, the hair was always perfect. Priorities.",
+    }
+  },
+  4: {
+    videos: [
+      // { file:"farewell.mp4", title:"Last Day Together", thumb:"farewell_thumb.jpg" },
+    ],
+    photos: [
+      // "photo1.jpg",
+      // "graduation_day.jpg",
+    ],
+    hero: {
+      label: "Chapter 04 · Fourth Year",
+      title: "The Final Chapter",
+      desc: "2nd Floor Gang, last run. The year we realised it was ending and panicked accordingly. The legends don't leave — they just go off-screen.",
+    }
+  }
+};
+
+/* ════════════════════════════════
+   APP STATE
+   ════════════════════════════════ */
+let usernameOk  = false;
+let currentYear = null;
+let musicMuted  = false;
+let ytPlayer    = null;
+let ytApiReady  = false;
+let pendingPlay = null;
+
+// Hero slideshow
+let heroSlides    = [];
+let heroIdx       = 0;
+let heroTimer     = null;
+
+// Lightbox
+let lbPhotos      = [];
+let lbCurrentIdx  = 0;
+
+/* ════════════════════════════════
+   SCREEN MANAGEMENT
+   ════════════════════════════════ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ════════════════════════════════
+   LOGIN
+   ════════════════════════════════ */
+function handleLogin(){
+  if(!usernameOk) checkUsername(); else checkPassword();
+}
+
+function checkUsername(){
+  const inp=document.getElementById('uinput');
+  const err=document.getElementById('uerr');
+  const v=inp.value.trim();
+  if(!v){ showErr(inp,err,"Username enter cheyyara!"); return; }
+  if(v!==USERNAME){ showErr(inp,err,"Don't u know ur own family name 😂"); return; }
+  err.textContent=""; inp.classList.remove('err');
+  inp.disabled=true; inp.style.opacity=".5";
+  usernameOk=true;
+  const pf=document.getElementById('pfield');
+  pf.style.display='block'; pf.style.animation='fadeUp .4s ease both';
+  document.getElementById('login-btn').textContent="Let's Go! 🎬";
+  document.getElementById('pinput').focus();
+}
+
+function checkPassword(){
+  const inp=document.getElementById('pinput');
+  const err=document.getElementById('perr');
+  const v=inp.value.trim();
+  if(!v){ showErr(inp,err,"Password enter cheyyara!"); return; }
+  if(v!==PASSWORD){
+    showErr(inp,err,"Neeku nee frnds gurinchi kuda teleeda ra waste ga 😭"); return;
+  }
+  err.textContent=""; inp.classList.remove('err');
+  document.getElementById('login-btn').textContent="🎉 Loading...";
+  setTimeout(()=>{
+    showScreen('profile-screen');
+    setTimeout(()=>{ document.getElementById('bday-overlay').classList.add('open'); },700);
+  },500);
+}
+
+function showErr(inp,errEl,msg){
+  inp.classList.add('err'); errEl.textContent=msg;
+  setTimeout(()=>inp.classList.remove('err'),500);
+}
+
+document.addEventListener('keydown',e=>{ if(e.key==='Enter') handleLogin(); });
+
+let hintOn=false;
+function toggleHint(){
+  hintOn=!hintOn;
+  document.getElementById('hint-box').classList.toggle('on',hintOn);
+}
+
+/* ════════════════════════════════
+   BIRTHDAY MODAL
+   ════════════════════════════════ */
+function closeBday(){ document.getElementById('bday-overlay').classList.remove('open'); }
+
+/* ════════════════════════════════
+   YEAR / GALLERY
+   ════════════════════════════════ */
+function openYear(year){
+  currentYear=year;
+  const cfg=MEDIA[year];
+  const hero=cfg.hero;
+
+  document.getElementById('hero-label').textContent=hero.label;
+  document.getElementById('hero-title').textContent=hero.title;
+  document.getElementById('hero-desc').textContent=hero.desc;
+
+  // Build hero slideshow from first 6 photos + first 2 video thumbs
+  buildHeroSlideshow(year, cfg);
+
+  buildVideoCards(year, cfg.videos||[]);
+  buildPhotoCards(year, cfg.photos||[]);
+
+  showScreen('gallery-screen');
+  startMusic(year);
+
+  const nav=document.getElementById('gal-nav');
+  window.onscroll=()=>{ nav.classList.toggle('solid',window.scrollY>60); };
+}
+
+/* ── HERO SLIDESHOW ── */
+function buildHeroSlideshow(year, cfg){
+  const slidesEl = document.getElementById('hero-slides');
+  const dotsEl   = document.getElementById('hero-dots');
+  const stripEl  = document.getElementById('hero-strip');
+  slidesEl.innerHTML=''; dotsEl.innerHTML=''; stripEl.innerHTML='';
+  clearInterval(heroTimer);
+  heroSlides=[]; heroIdx=0;
+
+  // Collect up to 6 hero images (photos first, then video thumbs)
+  const photos=cfg.photos||[];
+  const vids=cfg.videos||[];
+  const maxSlides=6;
+  const items=[];
+
+  photos.slice(0,maxSlides).forEach(f=>{
+    items.push({ src: BASE+'/year'+year+'/'+f, type:'photo' });
+  });
+  vids.slice(0,Math.max(0,maxSlides-items.length)).forEach(v=>{
+    if(v.thumb) items.push({ src: BASE+'/year'+year+'/'+v.thumb, type:'video', videoFile: v.file, title: v.title });
+  });
+
+  if(items.length===0){
+    slidesEl.innerHTML=`<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0000,#141414)"></div>`;
+    return;
+  }
+
+  heroSlides=items;
+
+  items.forEach((item,i)=>{
+    // Slide
+    const slide=document.createElement('div');
+    slide.className='hero-slide'+(i===0?' active':'');
+    const img=document.createElement('img');
+    img.src=item.src; img.alt='Hero '+(i+1);
+    img.loading='lazy';
+    img.onerror=function(){ this.style.display='none'; slide.style.background='linear-gradient(135deg,#1a0000,#141414)'; };
+    slide.appendChild(img);
+    slidesEl.appendChild(slide);
+
+    // Dot
+    const dot=document.createElement('div');
+    dot.className='hdot'+(i===0?' on':'');
+    dot.onclick=()=>goHeroSlide(i);
+    dotsEl.appendChild(dot);
+
+    // Strip thumb
+    const thumb=document.createElement('div');
+    thumb.className='strip-thumb'+(i===0?' on':'');
+    thumb.onclick=()=>goHeroSlide(i);
+    const timg=document.createElement('img');
+    timg.src=item.src; timg.alt='';
+    timg.onerror=()=>{ thumb.style.background='#222'; };
+    thumb.appendChild(timg);
+    stripEl.appendChild(thumb);
+  });
+
+  if(items.length>1){
+    heroTimer=setInterval(()=>goHeroSlide((heroIdx+1)%heroSlides.length),4500);
+  }
+
+  // Set hero play to first video in cfg
+  window._heroVideoUrl = (vids.length>0) ? BASE+'/year'+year+'/'+vids[0].file : null;
+  window._heroVideoTitle = vids.length>0 ? vids[0].title||'Featured Video' : '';
+}
+
+function goHeroSlide(idx){
+  clearInterval(heroTimer);
+  const slides=document.querySelectorAll('.hero-slide');
+  const dots=document.querySelectorAll('.hdot');
+  const thumbs=document.querySelectorAll('.strip-thumb');
+  slides.forEach((s,i)=>{s.classList.toggle('active',i===idx);});
+  dots.forEach((d,i)=>{d.classList.toggle('on',i===idx);});
+  thumbs.forEach((t,i)=>{t.classList.toggle('on',i===idx);});
+  heroIdx=idx;
+  if(heroSlides.length>1){
+    heroTimer=setInterval(()=>goHeroSlide((heroIdx+1)%heroSlides.length),4500);
+  }
+}
+
+function heroPlay(){
+  const u=window._heroVideoUrl;
+  if(u){ openVmodal(u, window._heroVideoTitle||'Featured Video', 'Year '+currentYear+' · Hero Feature'); }
+  else if(lbPhotos.length>0){ openLightboxAt(0); }
+}
+
+function scrollToContent(){
+  document.getElementById('content-area').scrollIntoView({behavior:'smooth'});
+}
+
+/* ── VIDEO CARDS ── */
+function buildVideoCards(year,videos){
+  const grid=document.getElementById('video-cards');
+  grid.innerHTML='';
+  if(!videos||videos.length===0){
+    grid.innerHTML='<div class="empty-row">No videos yet — add .mp4 files to your year'+year+'/ folder in GitHub 🎥</div>';
+    return;
+  }
+  videos.forEach((v,i)=>{
+    const url=BASE+'/year'+year+'/'+v.file;
+    const thumb=v.thumb ? BASE+'/year'+year+'/'+v.thumb : '';
+    const card=document.createElement('div');
+    card.className='media-card';
+    card.style.animationDelay=(i*.08)+'s';
+    card.innerHTML=`
+      ${thumb?`<img src="${thumb}" alt="${v.title||'Video'}" loading="lazy" onerror="this.parentNode.style.background='#222';this.remove()"/>`
+             :`<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#222);display:flex;align-items:center;justify-content:center;font-size:2rem;">🎬</div>`}
+      <span class="video-badge">▶ VIDEO</span>
+      <div class="play-icon"><svg viewBox="0 0 24 24" fill="#000"><polygon points="5,3 19,12 5,21"/></svg></div>
+      <div class="card-overlay">
+        <div class="card-title">${v.title||'Memory '+(i+1)}</div>
+        <div class="card-meta">Year ${year} · Tap to play</div>
+      </div>`;
+    card.onclick=()=>openVmodal(url, v.title||'Memory '+(i+1), 'Year '+year);
+    grid.appendChild(card);
+  });
+}
+
+/* ── PHOTO CARDS ── */
+function buildPhotoCards(year,photos){
+  const grid=document.getElementById('photo-cards');
+  grid.innerHTML='';
+  lbPhotos=[];
+  if(!photos||photos.length===0){
+    grid.innerHTML='<div class="empty-row">No photos yet — add .jpg/.png files to your year'+year+'/ folder in GitHub 📂</div>';
+    return;
+  }
+  lbPhotos=photos.map(f=>BASE+'/year'+year+'/'+f);
+  photos.forEach((file,i)=>{
+    const url=BASE+'/year'+year+'/'+file;
+    const card=document.createElement('div');
+    card.className='media-card';
+    card.style.animationDelay=(i*.05)+'s';
+    card.innerHTML=`
+      <img src="${url}" alt="Memory ${i+1}" loading="lazy"
+           onerror="this.parentNode.style.background='#1e1e1e';this.remove()"/>
+      <span class="photo-badge">PHOTO</span>
+      <div class="card-overlay">
+        <div class="card-title">Memory ${i+1}</div>
+        <div class="card-meta">Year ${year} · Tap to view</div>
+      </div>`;
+    card.onclick=()=>openLightboxAt(i);
+    grid.appendChild(card);
+  });
+}
+
+function goBack(){
+  stopMusic();
+  clearInterval(heroTimer);
+  window.onscroll=null;
+  showScreen('profile-screen');
+}
+
+/* ── VIDEO MODAL ── */
+function openVmodal(url,title,meta){
+  const vid=document.getElementById('vmodal-vid');
+  vid.src=url;
+  document.getElementById('vmodal-title').textContent=title;
+  document.getElementById('vmodal-meta').textContent=meta;
+  document.getElementById('vmodal').classList.add('open');
+  vid.play().catch(()=>{});
+}
+function closeVmodal(){
+  const vid=document.getElementById('vmodal-vid');
+  vid.pause(); vid.src='';
+  document.getElementById('vmodal').classList.remove('open');
+}
+
+/* ── LIGHTBOX ── */
+function openLightboxAt(idx){
+  lbCurrentIdx=idx;
+  document.getElementById('lb-img').src=lbPhotos[idx]||'';
+  document.getElementById('lightbox').classList.add('open');
+}
+function lbPrev(){
+  lbCurrentIdx=(lbCurrentIdx-1+lbPhotos.length)%lbPhotos.length;
+  document.getElementById('lb-img').src=lbPhotos[lbCurrentIdx];
+}
+function lbNext(){
+  lbCurrentIdx=(lbCurrentIdx+1)%lbPhotos.length;
+  document.getElementById('lb-img').src=lbPhotos[lbCurrentIdx];
+}
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+
+// Close on backdrop click
+document.getElementById('lightbox').addEventListener('click',function(e){ if(e.target===this||e.target===document.getElementById('lb-img')){}else if(e.target===this)closeLightbox(); });
+document.getElementById('vmodal').addEventListener('click',function(e){ if(e.target===this)closeVmodal(); });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeLightbox(); closeVmodal(); document.getElementById('bday-overlay').classList.remove('open'); }
+  if(e.key==='ArrowRight'&&document.getElementById('lightbox').classList.contains('open')) lbNext();
+  if(e.key==='ArrowLeft'&&document.getElementById('lightbox').classList.contains('open')) lbPrev();
+});
+
+/* ════════════════════════════════
+   MUSIC — YouTube IFrame API
+   ════════════════════════════════ */
+(function(){
+  const tag=document.createElement('script');
+  tag.src='https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+})();
+
+window.onYouTubeIframeAPIReady=function(){
+  ytApiReady=true;
+  if(pendingPlay!==null) startMusic(pendingPlay);
+};
+
+function startMusic(year){
+  const song=YEAR_SONGS[year];
+  if(!song) return;
+  document.getElementById('song-name').textContent=song.name;
+  document.getElementById('music-note').style.display='inline';
+  document.getElementById('music-toggle').textContent=musicMuted?'♪ Unmute':'🔇 Mute';
+
+  if(!ytApiReady){ pendingPlay=year; return; }
+  pendingPlay=null;
+
+  const container=document.getElementById('yt-players');
+  container.innerHTML='';
+  const div=document.createElement('div');
+  div.id='ytf'+year;
+  container.appendChild(div);
+
+  if(ytPlayer){ try{ ytPlayer.destroy(); }catch(e){} }
+
+  ytPlayer=new YT.Player('ytf'+year,{
+    height:'1',width:'1',
+    videoId:song.ytId,
+    playerVars:{autoplay:1,loop:1,playlist:song.ytId,controls:0,mute:musicMuted?1:0},
+    events:{
+      onReady:function(e){
+        if(!musicMuted){ e.target.unMute(); e.target.setVolume(55); }
+        e.target.playVideo();
+      }
+    }
+  });
+}
+
+function stopMusic(){
+  if(ytPlayer){ try{ ytPlayer.stopVideo(); ytPlayer.destroy(); }catch(e){} }
+  ytPlayer=null;
+  document.getElementById('music-note').style.display='none';
+  document.getElementById('song-name').textContent='';
+}
+
+function toggleMusic(){
+  musicMuted=!musicMuted;
+  document.getElementById('music-toggle').textContent=musicMuted?'♪ Unmute':'🔇 Mute';
+  if(ytPlayer){
+    try{
+      if(musicMuted) ytPlayer.mute();
+      else{ ytPlayer.unMute(); ytPlayer.setVolume(55); }
+    }catch(e){}
+  }
+}
+</script>
+</body>
+</html>
